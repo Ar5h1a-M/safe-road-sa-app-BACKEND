@@ -6,6 +6,7 @@ import cors from "cors";
 
 
 import authRoutes from "./routes/auth.js";
+import reportsRouter from "./routes/reports.js"
 
 
 const app = express();
@@ -35,6 +36,7 @@ console.log("Supabase URL:", process.env.SUPABASE_URL);
 // Mount routes
 console.log("Loading routes...");
 app.use("/api/auth", authRoutes);     // -> /api/auth/login, /api/auth/signup
+app.use("/api/reports", reportsRouter);
 console.log("Routes loaded successfully!");
 
 // Error handler
