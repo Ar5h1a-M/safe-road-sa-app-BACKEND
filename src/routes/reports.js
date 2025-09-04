@@ -32,14 +32,13 @@ transporter.verify((error, success) => {
 });
 
 async function sendEmailToAllUsers(subject, htmlContent) {
-  // Get all auth users
-  const { data: users, error } = await supabase.auth.admin.listUsers();
+  const { data, error } = await supabase.auth.admin.listUsers();
   if (error) {
     console.error("Error fetching users for email:", error);
     return;
   }
 
-  const emails = users.map(u => u.email).filter(Boolean);
+  const emails = data.users.map(u => u.email).filter(Boolean); // data.users, not data directly
 
   if (emails.length === 0) return;
 
@@ -55,6 +54,7 @@ async function sendEmailToAllUsers(subject, htmlContent) {
     console.error("Error sending notification emails:", err);
   }
 }
+
 
 // Utility: upload multiple files to Supabase
 async function uploadFiles(files, type, reportId) {
