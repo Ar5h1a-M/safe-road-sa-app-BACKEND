@@ -6,7 +6,8 @@ import cors from "cors";
 
 
 import authRoutes from "./routes/auth.js";
-import reportsRouter from "./routes/reports.js"
+import reportsRouter from "./routes/reports.js";
+import savedRoutesRouter from "./routes/saved_routes.js";
 
 
 const app = express();
@@ -37,6 +38,7 @@ console.log("Supabase URL:", process.env.SUPABASE_URL);
 console.log("Loading routes...");
 app.use("/api/auth", authRoutes);     // -> /api/auth/login, /api/auth/signup
 app.use("/api/reports", reportsRouter);
+app.use("/api/saved-routes", savedRoutesRouter);
 console.log("Routes loaded successfully!");
 
 // Error handler
@@ -48,7 +50,8 @@ app.use((err, req, res, _next) => {
 
 
 const PORT = process.env.PORT || 4001;
-app.listen(PORT, () => console.log(`Backend on :${PORT}`));
 
+app.listen(PORT, () => {
+  console.log(`✅ Backend on :${PORT}`);
+});
 
-export default app;
