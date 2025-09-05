@@ -125,4 +125,103 @@ router.post("/emergency", async (req, res) => {
   res.json(data)
 })
 
+// GET all reports
+router.get("/", async (req, res) => {
+  try {
+    const { data: hazards, error: hazardsError } = await supabase
+      .from("road_hazards")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    const { data: infrastructure, error: infrastructureError } = await supabase
+      .from("infrastructure_requests")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    const { data: trafficLights, error: trafficLightsError } = await supabase
+      .from("traffic_light_reports")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    const { data: emergencies, error: emergenciesError } = await supabase
+      .from("emergency_requests")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (hazardsError || infrastructureError || trafficLightsError || emergenciesError) {
+      return res.status(500).json({ error: "Failed to fetch reports" });
+    }
+
+    res.json({
+      road_hazards: hazards,
+      infrastructure_requests: infrastructure,
+      traffic_light_reports: trafficLights,
+      emergency_requests: emergencies
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET specific report types
+router.get("/hazards", async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("road_hazards")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) return res.status(500).json({ error: error.message });
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get("/infrastructure", async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("infrastructure_requests")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) return res.status(500).json({ error: error.message });
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get("/traffic-lights", async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("traffic_light_reports")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) return res.status(500).json({ error: error.message });
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get("/emergencies", async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("emergency_requests")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) return res.status(500).json({ error: error.message });
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router
